@@ -1,0 +1,228 @@
+/* folio — shared styles. Light and dark themes follow the OS setting. */
+
+/* Self-hosted so box-drawing characters come from the same font as the text;
+   the Google Fonts build of JetBrains Mono leaves them out, which misaligns
+   terminal borders. Licensed under the SIL OFL (fonts/OFL.txt). */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("fonts/JetBrainsMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --fog: #e8ecef;
+  --paper: #f4f6f8;
+  --slate: #15202b;
+  --muted: #56636f;
+  --rule: #c9d1d8;
+  --harbor: #086a73;
+  --signal: #e8a317;
+  --deep: #0f1a24;
+  --focus: #086a73;
+
+  /* Terminal palette, used by the kaffy renders in both themes. */
+  --t-bg: #0f1a24;
+  --t-fg: #d5dee6;
+  --t-cyan: #4fc8d0;
+  --t-green: #7fcf7a;
+  --t-yellow: #e8b84a;
+  --t-red: #ef6f6c;
+  --t-magenta: #c792ea;
+  --t-blue: #6fa8ff;
+  --t-black: #0f1a24;
+  --t-white: #d5dee6;
+
+  --sans: "Archivo", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --measure: 66ch;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fog: #0e161e;
+    --paper: #142029;
+    --slate: #dce3e9;
+    --muted: #93a1ad;
+    --rule: #263642;
+    --harbor: #4fc2c9;
+    --focus: #4fc2c9;
+    --deep: #182833;
+    --t-bg: #0b141b;
+  }
+  /* Lift dark surfaces off the dark page. */
+  .command, .terminal { box-shadow: 0 0 0 1px #263642; }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--fog);
+  color: var(--slate);
+  font: 400 1.0625rem/1.6 var(--sans);
+  font-stretch: 100%;
+}
+
+a { color: var(--harbor); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+
+code, pre, kbd { font-family: var(--mono); font-size: 0.875em; }
+
+.wrap { width: min(100% - 2rem, 72rem); margin-inline: auto; }
+
+/* Site header */
+.site-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-block: 1.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+.site-head a { color: inherit; text-decoration: none; }
+.site-head a:hover { text-decoration: underline; }
+.site-name { font-weight: 700; font-stretch: 112%; letter-spacing: -0.01em; }
+.site-nav { display: flex; gap: 1.25rem; font-size: 0.9375rem; }
+
+/* Headlines use the width axis: wide and heavy. */
+.display {
+  font-weight: 800;
+  font-stretch: 125%;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-stretch: 118%;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin: 0 0 1rem;
+}
+
+h3 { font-size: 1.0625rem; font-weight: 700; margin: 0 0 0.25rem; }
+
+p { margin: 0 0 1rem; max-width: var(--measure); }
+
+.lede { font-size: 1.25rem; line-height: 1.5; color: var(--muted); max-width: 46ch; }
+
+section { padding-block: 3.5rem; border-top: 1px solid var(--rule); }
+section:first-of-type { border-top: 0; }
+
+.site-foot {
+  padding-block: 2rem 3rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* Command block with copy button */
+.command {
+  display: flex;
+  align-items: stretch;
+  max-width: 100%;
+  background: var(--deep);
+  color: #e6edf2;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.command code {
+  flex: 1;
+  min-width: 0;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+.command code::before { content: "$ "; color: #7d8b97; user-select: none; }
+.copy {
+  flex: none;
+  border: 0;
+  border-left: 1px solid #263642;
+  background: transparent;
+  color: #e6edf2;
+  font: 600 0.875rem var(--sans);
+  padding: 0 1.1rem;
+  cursor: pointer;
+  min-width: 5.5rem;
+}
+.copy:hover { background: #1b2a37; }
+.copy[data-state="done"] { color: var(--t-green); }
+
+/* kaffy renders: a real terminal frame */
+.terminal {
+  background: var(--t-bg);
+  color: var(--t-fg);
+  border-radius: 8px;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 24px 48px -24px rgb(8 20 30 / 0.55);
+  overflow: hidden;
+}
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.5rem 0;
+  overflow-x: auto;
+}
+.terminal-bar [role="tab"] {
+  border: 0;
+  border-radius: 5px 5px 0 0;
+  background: transparent;
+  color: #93a1ad;
+  font: 500 0.875rem var(--sans);
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.terminal-bar [role="tab"]:hover { color: var(--t-fg); }
+.terminal-bar [role="tab"][aria-selected="true"] { background: #17252f; color: var(--t-fg); }
+.terminal-screen { background: #17252f; overflow-x: auto; }
+
+pre.tui {
+  margin: 0;
+  padding: 1rem 1.1rem 1.1rem;
+  font-family: var(--mono);
+  font-size: clamp(8.5px, 1.05vw, 12.5px);
+  line-height: 1.32;
+  color: var(--t-fg);
+  width: max-content;
+  min-width: 100%;
+}
+pre.tui[hidden] { display: none; }
+.tui .fg-cyan { color: var(--t-cyan); }
+.tui .fg-green { color: var(--t-green); }
+.tui .fg-yellow { color: var(--t-yellow); }
+.tui .fg-red { color: var(--t-red); }
+.tui .fg-magenta { color: var(--t-magenta); }
+.tui .fg-blue { color: var(--t-blue); }
+.tui .fg-black { color: var(--t-black); }
+.tui .fg-white { color: var(--t-white); }
+.tui .bg-cyan { background: var(--t-cyan); }
+.tui .bg-green { background: var(--t-green); }
+.tui .bg-yellow { background: var(--t-yellow); }
+.tui .bg-red { background: var(--t-red); }
+.tui .bg-magenta { background: var(--t-magenta); }
+.tui .rev:not([class*="bg-"]) { background: var(--t-fg); color: #17252f; }
+.tui .b { font-weight: 700; }
+.tui .dim { opacity: 0.55; }
+/* Dim text on a selected (reversed) row: fade the text, keep the bar solid. */
+.tui .rev.dim { opacity: 1; color: #55656f; }
+.tui .u { text-decoration: underline; text-underline-offset: 2px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .copy, .terminal-bar [role="tab"] { transition: background-color 120ms, color 120ms; }
+}

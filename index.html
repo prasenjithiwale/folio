@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prasenjit Vijay Hiwale</title>
+  <meta name="description" content="Projects by Prasenjit Vijay Hiwale, a software developer in Pune.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23086a73'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='white' text-anchor='middle'%3EPH%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/home.css">
+</head>
+<body>
+  <header class="wrap site-head">
+    <a class="site-name" href="./">Prasenjit Vijay Hiwale</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="#projects">Projects</a>
+      <a href="https://github.com/prasenjithiwale">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap intro" aria-labelledby="name">
+      <h1 class="display" id="name">Prasenjit Vijay Hiwale</h1>
+      <p class="lede">Software developer in Pune. I build tools for developers and publish them here, with installers you can run in one line.</p>
+    </section>
+
+    <section class="wrap" id="projects" aria-labelledby="projects-title">
+      <div class="log-head">
+        <h2 id="projects-title">Projects</h2>
+        <p>Listed in the order they shipped, like records in a log: each new project gets the next offset.</p>
+      </div>
+
+      <ol class="log" start="0">
+        <li class="record" data-releases="kaffy/releases/">
+          <span class="offset" aria-hidden="true">0</span>
+          <div class="record-body">
+            <h3><a href="kaffy/">kaffy</a></h3>
+            <p>A terminal UI for exploring Kafka clusters: browse topics, follow messages live, jump to any offset or time, filter with regular expressions, and read Avro through the Schema Registry.</p>
+            <p class="record-meta">
+              Rust, ratatui, librdkafka.
+              <span class="when-loaded">Latest release <strong data-release="version"></strong> for Linux.</span>
+            </p>
+            <div class="command">
+              <code id="kaffy-install">curl -fsSL https://prasenjithiwale.github.io/folio/kaffy/install.sh | sh</code>
+              <button class="copy" type="button" data-copy="#kaffy-install">Copy</button>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="wrap site-foot">
+    <p>Based in Pune, India. Find more of my work on <a href="https://github.com/prasenjithiwale">GitHub</a>.</p>
+  </footer>
+  <script src="assets/site.js" defer></script>
+</body>
+</html>

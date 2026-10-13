@@ -1,0 +1,80 @@
+/* kaffy project page */
+
+.hero { padding-block: 3.5rem 4rem; }
+.hero .display { font-size: clamp(4.5rem, 16vw, 11rem); margin-left: -0.04em; }
+.hero .lede { margin-block: 1.25rem 2rem; }
+.hero .command { max-width: 54rem; }
+
+.release-line { margin-top: 0.9rem; font-size: 0.9375rem; color: var(--muted); }
+.release-line strong { color: var(--slate); font-weight: 600; }
+/* The release marker: amber, the one place the signal color appears. */
+.release-line strong::before {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  background: var(--signal);
+  vertical-align: 0.1em;
+}
+
+/* Release details appear once latest.json loads; a note shows if it can't. */
+.when-loaded, .when-missing { display: none; }
+[data-loaded="true"] .when-loaded { display: inline; }
+[data-loaded="true"] p.when-loaded { display: block; }
+[data-loaded="false"] .when-missing { display: block; }
+
+.hero .terminal { margin: 3rem 0 0; }
+.terminal-caption {
+  margin: 0;
+  padding: 0.75rem 1.1rem 0.9rem;
+  max-width: none;
+  color: #93a1ad;
+  font-size: 0.875rem;
+  border-top: 1px solid #22323e;
+}
+
+/* Sections: heading in a narrow left column, content on the right. */
+/* minmax(0, 1fr) lets long commands scroll instead of widening the page. */
+.columns { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.5rem 3rem; }
+@media (min-width: 52rem) {
+  .columns { grid-template-columns: 14rem minmax(0, 1fr); }
+  .columns > h2 { position: sticky; top: 1.5rem; align-self: start; }
+}
+.columns h3 { margin-top: 2rem; }
+.columns h3:first-child { margin-top: 0; }
+.columns .command { margin-bottom: 1rem; }
+
+.defs { margin: 0 0 1rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.35rem 1.5rem; max-width: var(--measure); }
+@media (min-width: 40rem) { .defs { grid-template-columns: max-content minmax(0, 1fr); } }
+.defs dt { font-weight: 600; }
+.defs dd { margin: 0 0 0.5rem; color: var(--muted); }
+
+.hash { word-break: break-all; color: var(--muted); }
+
+pre.config {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+.keys { border-collapse: collapse; margin-bottom: 1rem; width: 100%; max-width: var(--measure); }
+.keys caption { text-align: left; font-weight: 700; padding-bottom: 0.5rem; }
+.keys th, .keys td { text-align: left; padding: 0.45rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.keys th { width: 7.5rem; font-weight: 400; white-space: nowrap; }
+kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--paper);
+  text-align: center;
+  font-size: 0.8125rem;
+}

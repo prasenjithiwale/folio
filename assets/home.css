@@ -1,0 +1,38 @@
+/* Home page */
+
+.intro { padding-block: 4.5rem 3.5rem; }
+.intro .display { font-size: clamp(2.75rem, 8.5vw, 6.5rem); max-width: 12ch; }
+.intro .lede { margin-top: 1.75rem; }
+
+.log-head { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 3rem; margin-bottom: 2rem; }
+.log-head p { color: var(--muted); }
+@media (min-width: 52rem) { .log-head { grid-template-columns: 14rem minmax(0, 1fr); } }
+
+/* Projects as records in a log: the offset is the record's position. */
+.log { list-style: none; margin: 0; padding: 0; }
+.record {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: 0 1rem;
+  padding-block: 2rem;
+  border-top: 1px solid var(--rule);
+}
+@media (min-width: 52rem) { .record { grid-template-columns: 14rem minmax(0, 1fr); gap: 0 3rem; } }
+
+.offset {
+  font-weight: 800;
+  font-stretch: 125%;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 0.85;
+  color: var(--rule);
+  font-variant-numeric: tabular-nums;
+}
+
+.record h3 { font-size: 1.75rem; font-stretch: 118%; letter-spacing: -0.015em; margin-bottom: 0.5rem; }
+.record h3 a { color: inherit; text-decoration-color: var(--harbor); }
+.record-meta { color: var(--muted); font-size: 0.9375rem; }
+.record-meta strong { color: var(--slate); font-weight: 600; }
+.record .command { max-width: 56rem; }
+
+.when-loaded { display: none; }
+[data-loaded="true"] .when-loaded { display: inline; }
