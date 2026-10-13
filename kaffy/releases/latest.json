@@ -1,12 +1,24 @@
 {
-  "version": "v0.3.0",
-  "published_at": "2026-10-13T09:59:00Z",
+  "version": "v0.4.0",
+  "published_at": "2026-10-13T12:03:27Z",
   "assets": [
     {
-      "target": "x86_64-unknown-linux-gnu",
-      "url": "v0.3.0/kaffy-v0.3.0-x86_64-unknown-linux-gnu.tar.gz",
-      "size": 7656937,
-      "sha256": "045e649699068cb1b28224d821a38392b78665dfff9bcca6150fe7d0e1527eb4"
+      "target": "aarch64-apple-darwin",
+      "url": "v0.4.0/kaffy-v0.4.0-aarch64-apple-darwin.tar.gz",
+      "size": 7159042,
+      "sha256": "8654da27ad7957744b1f0eed2e1410a14a2ebbeaf4ce55eaa8f3fa39ddf5ed63"
+    },
+    {
+      "target": "x86_64-apple-darwin",
+      "url": "v0.4.0/kaffy-v0.4.0-x86_64-apple-darwin.tar.gz",
+      "size": 7151716,
+      "sha256": "c8bf4ec5f10e18183b53b49d57196e42bf4e64de36475d0ae7ba69ea2443c38f"
+    },
+    {
+      "target": "x86_64-unknown-linux-musl",
+      "url": "v0.4.0/kaffy-v0.4.0-x86_64-unknown-linux-musl.tar.gz",
+      "size": 8129617,
+      "sha256": "7ed0f89d382fe5ae0dd55af8956f71c3701d945baee4a1a9927e73a901c51a1a"
     }
   ]
 }
