@@ -1,0 +1,12 @@
+{
+  "version": "v0.1.0",
+  "published_at": "2026-10-13T06:26:25Z",
+  "assets": [
+    {
+      "target": "x86_64-unknown-linux-gnu",
+      "url": "v0.1.0/kaffy-v0.1.0-x86_64-unknown-linux-gnu.tar.gz",
+      "size": 6228081,
+      "sha256": "5367f3da3e9d74146f23c7a7a0a635e0b345fc3e565f0c4aa6c8122ec1e51c47"
+    }
+  ]
+}
