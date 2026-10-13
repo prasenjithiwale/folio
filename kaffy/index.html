@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>kaffy: a terminal UI for Kafka</title>
-  <meta name="description" content="kaffy is a terminal UI for exploring Kafka clusters: browse topics, follow messages live, seek by offset or time, filter, and decode Avro through the Schema Registry.">
+  <meta name="description" content="kaffy is a terminal UI for exploring and operating Kafka clusters: follow messages live, seek by offset or time, filter, decode Avro, watch consumer lag, reset offsets, produce and replay messages.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f1a24'/%3E%3Cpath d='M9 8v16M9 16l9-8M12 13l7 11' stroke='%234fc8d0' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +25,7 @@
     <section class="wrap hero" aria-labelledby="title">
       <div class="hero-text">
         <h1 class="display" id="title">kaffy</h1>
-        <p class="lede">A terminal UI for exploring Kafka clusters. Browse topics, follow messages live, jump to any offset or time, and read Avro through your Schema Registry.</p>
+        <p class="lede">A terminal UI for exploring and operating Kafka clusters. Follow messages live, jump to any offset or time, read Avro through your Schema Registry, and keep an eye on consumer lag.</p>
         <div class="command" id="install-top">
           <code id="install-cmd">curl -fsSL https://prasenjithiwale.github.io/folio/kaffy/install.sh | sh</code>
           <button class="copy" type="button" data-copy="#install-cmd">Copy</button>
@@ -41,75 +41,78 @@
           <button role="tab" id="tab-messages" aria-controls="panel-messages" aria-selected="true" tabindex="0">Live tail</button>
           <button role="tab" id="tab-filter" aria-controls="panel-filter" aria-selected="false" tabindex="-1">Filter</button>
           <button role="tab" id="tab-detail" aria-controls="panel-detail" aria-selected="false" tabindex="-1">Avro message</button>
+          <button role="tab" id="tab-groups" aria-controls="panel-groups" aria-selected="false" tabindex="-1">Consumer groups</button>
+          <button role="tab" id="tab-group" aria-controls="panel-group" aria-selected="false" tabindex="-1">Group lag</button>
+          <button role="tab" id="tab-reset" aria-controls="panel-reset" aria-selected="false" tabindex="-1">Offset reset</button>
           <button role="tab" id="tab-topics" aria-controls="panel-topics" aria-selected="false" tabindex="-1">Topics</button>
         </div>
         <div role="tabpanel" id="panel-messages" aria-labelledby="tab-messages">
-          <div class="terminal-screen"><pre class="tui" aria-label="kaffy screen: Live tail"><span class="fg-black bg-cyan b"> kaffy </span> <span class="dim">profile </span>demo <span class="fg-black bg-yellow b"> READ-ONLY </span><span class="dim">  │  </span><span class="fg-green">● connected · 3 brokers</span><span class="dim">  │  topic </span><span class="fg-cyan b">orders</span>
+          <div class="terminal-screen"><pre class="tui" aria-label="kaffy screen: Live tail"><span class="fg-black bg-cyan b"> kaffy </span> <span class="dim">profile </span>demo <span class="fg-black bg-magenta b"> WRITE </span><span class="dim">  │  </span><span class="fg-green">● connected · 3 brokers</span><span class="dim">  │  topic </span><span class="fg-cyan b">orders</span>                <span class="rev"> 1 Topics </span>  <span class="dim"> 2 Groups </span>
 ┌<span class="fg-cyan b"> orders </span>─────────<span class="dim"> 3 partitions · from last 100 per partition · 313 buffered (max 5000) · 313 received </span><span class="fg-green"> ● LIVE </span>┐
 │<span class="b u">P    Offset  Timestamp                Key       Value                                                         </span>│
-│1    397     <span class="dim">2026-10-13 11:29:33.280</span>  cust-067  {&quot;order_id&quot;:&quot;ord-1-000397&quot;,&quot;customer&quot;:&quot;cust-067&quot;,&quot;status&quot;:&quot;PAI│
-│2    397     <span class="dim">2026-10-13 11:29:33.280</span>  cust-109  {&quot;order_id&quot;:&quot;ord-2-000397&quot;,&quot;customer&quot;:&quot;cust-109&quot;,&quot;status&quot;:&quot;CAN│
-│0    398     <span class="dim">2026-10-13 11:29:34.780</span>  cust-062  {&quot;order_id&quot;:&quot;ord-0-000398&quot;,&quot;customer&quot;:&quot;cust-062&quot;,&quot;status&quot;:&quot;SHI│
-│1    398     <span class="dim">2026-10-13 11:29:34.780</span>  cust-222  {&quot;order_id&quot;:&quot;ord-1-000398&quot;,&quot;customer&quot;:&quot;cust-222&quot;,&quot;status&quot;:&quot;CRE│
-│2    398     <span class="dim">2026-10-13 11:29:34.780</span>  cust-007  {&quot;order_id&quot;:&quot;ord-2-000398&quot;,&quot;customer&quot;:&quot;cust-007&quot;,&quot;status&quot;:&quot;PAI│
-│0    399     <span class="dim">2026-10-13 11:29:36.280</span>  cust-221  <span class="dim">∅ tombstone                                                   </span>│
-│1    399     <span class="dim">2026-10-13 11:29:36.280</span>  cust-070  <span class="dim">∅ tombstone                                                   </span>│
-│2    399     <span class="dim">2026-10-13 11:29:36.280</span>  cust-025  <span class="dim">∅ tombstone                                                   </span>│
-│1    400     <span class="dim">2026-10-13 11:29:38.078</span>  cust-225  {&quot;order_id&quot;:&quot;ord-1-000400&quot;,&quot;customer&quot;:&quot;cust-225&quot;,&quot;status&quot;:&quot;CAN│
-│0    400     <span class="dim">2026-10-13 11:29:38.199</span>  cust-235  {&quot;order_id&quot;:&quot;ord-0-000400&quot;,&quot;customer&quot;:&quot;cust-235&quot;,&quot;status&quot;:&quot;PAI│
-│1    401     <span class="dim">2026-10-13 11:29:38.319</span>  cust-053  {&quot;order_id&quot;:&quot;ord-1-000401&quot;,&quot;customer&quot;:&quot;cust-053&quot;,&quot;status&quot;:&quot;CRE│
-│2    400     <span class="dim">2026-10-13 11:29:38.439</span>  cust-064  {&quot;order_id&quot;:&quot;ord-2-000400&quot;,&quot;customer&quot;:&quot;cust-064&quot;,&quot;status&quot;:&quot;SHI│
-│1    402     <span class="dim">2026-10-13 11:29:38.559</span>  cust-021  {&quot;order_id&quot;:&quot;ord-1-000402&quot;,&quot;customer&quot;:&quot;cust-021&quot;,&quot;status&quot;:&quot;CRE│
-│0    401     <span class="dim">2026-10-13 11:29:38.678</span>  cust-224  {&quot;order_id&quot;:&quot;ord-0-000401&quot;,&quot;customer&quot;:&quot;cust-224&quot;,&quot;status&quot;:&quot;SHI│
-│2    401     <span class="dim">2026-10-13 11:29:38.799</span>  cust-077  {&quot;order_id&quot;:&quot;ord-2-000401&quot;,&quot;customer&quot;:&quot;cust-077&quot;,&quot;status&quot;:&quot;SHI│
-│1    403     <span class="dim">2026-10-13 11:29:38.918</span>  cust-091  {&quot;order_id&quot;:&quot;ord-1-000403&quot;,&quot;customer&quot;:&quot;cust-091&quot;,&quot;status&quot;:&quot;PAI│
-│1    404     <span class="dim">2026-10-13 11:29:39.040</span>  cust-024  {&quot;order_id&quot;:&quot;ord-1-000404&quot;,&quot;customer&quot;:&quot;cust-024&quot;,&quot;status&quot;:&quot;PAI│
-│0    402     <span class="dim">2026-10-13 11:29:39.160</span>  cust-122  {&quot;order_id&quot;:&quot;ord-0-000402&quot;,&quot;customer&quot;:&quot;cust-122&quot;,&quot;status&quot;:&quot;CAN│
-│1    405     <span class="dim">2026-10-13 11:29:39.278</span>  cust-129  {&quot;order_id&quot;:&quot;ord-1-000405&quot;,&quot;customer&quot;:&quot;cust-129&quot;,&quot;status&quot;:&quot;PAI│
-│1    406     <span class="dim">2026-10-13 11:29:39.398</span>  cust-040  {&quot;order_id&quot;:&quot;ord-1-000406&quot;,&quot;customer&quot;:&quot;cust-040&quot;,&quot;status&quot;:&quot;CRE│
-│<span class="rev">0    403     </span><span class="rev dim">2026-10-13 11:29:39.519</span><span class="rev">  cust-210  {&quot;order_id&quot;:&quot;ord-0-000403&quot;,&quot;customer&quot;:&quot;cust-210&quot;,&quot;status&quot;:&quot;CRE</span>│
+│1    397     <span class="dim">2026-10-13 12:51:29.445</span>  cust-067  {&quot;order_id&quot;:&quot;ord-1-000397&quot;,&quot;customer&quot;:&quot;cust-067&quot;,&quot;status&quot;:&quot;PAI│
+│2    397     <span class="dim">2026-10-13 12:51:29.445</span>  cust-109  {&quot;order_id&quot;:&quot;ord-2-000397&quot;,&quot;customer&quot;:&quot;cust-109&quot;,&quot;status&quot;:&quot;CAN│
+│0    398     <span class="dim">2026-10-13 12:51:30.945</span>  cust-062  {&quot;order_id&quot;:&quot;ord-0-000398&quot;,&quot;customer&quot;:&quot;cust-062&quot;,&quot;status&quot;:&quot;SHI│
+│1    398     <span class="dim">2026-10-13 12:51:30.945</span>  cust-222  {&quot;order_id&quot;:&quot;ord-1-000398&quot;,&quot;customer&quot;:&quot;cust-222&quot;,&quot;status&quot;:&quot;CRE│
+│2    398     <span class="dim">2026-10-13 12:51:30.945</span>  cust-007  {&quot;order_id&quot;:&quot;ord-2-000398&quot;,&quot;customer&quot;:&quot;cust-007&quot;,&quot;status&quot;:&quot;PAI│
+│0    399     <span class="dim">2026-10-13 12:51:32.445</span>  cust-221  <span class="dim">∅ tombstone                                                   </span>│
+│1    399     <span class="dim">2026-10-13 12:51:32.445</span>  cust-070  <span class="dim">∅ tombstone                                                   </span>│
+│2    399     <span class="dim">2026-10-13 12:51:32.445</span>  cust-025  <span class="dim">∅ tombstone                                                   </span>│
+│1    400     <span class="dim">2026-10-13 12:51:34.239</span>  cust-225  {&quot;order_id&quot;:&quot;ord-1-000400&quot;,&quot;customer&quot;:&quot;cust-225&quot;,&quot;status&quot;:&quot;CAN│
+│0    400     <span class="dim">2026-10-13 12:51:34.360</span>  cust-235  {&quot;order_id&quot;:&quot;ord-0-000400&quot;,&quot;customer&quot;:&quot;cust-235&quot;,&quot;status&quot;:&quot;PAI│
+│1    401     <span class="dim">2026-10-13 12:51:34.480</span>  cust-053  {&quot;order_id&quot;:&quot;ord-1-000401&quot;,&quot;customer&quot;:&quot;cust-053&quot;,&quot;status&quot;:&quot;CRE│
+│2    400     <span class="dim">2026-10-13 12:51:34.600</span>  cust-064  {&quot;order_id&quot;:&quot;ord-2-000400&quot;,&quot;customer&quot;:&quot;cust-064&quot;,&quot;status&quot;:&quot;SHI│
+│1    402     <span class="dim">2026-10-13 12:51:34.719</span>  cust-021  {&quot;order_id&quot;:&quot;ord-1-000402&quot;,&quot;customer&quot;:&quot;cust-021&quot;,&quot;status&quot;:&quot;CRE│
+│0    401     <span class="dim">2026-10-13 12:51:34.840</span>  cust-224  {&quot;order_id&quot;:&quot;ord-0-000401&quot;,&quot;customer&quot;:&quot;cust-224&quot;,&quot;status&quot;:&quot;SHI│
+│2    401     <span class="dim">2026-10-13 12:51:34.960</span>  cust-077  {&quot;order_id&quot;:&quot;ord-2-000401&quot;,&quot;customer&quot;:&quot;cust-077&quot;,&quot;status&quot;:&quot;SHI│
+│1    403     <span class="dim">2026-10-13 12:51:35.080</span>  cust-091  {&quot;order_id&quot;:&quot;ord-1-000403&quot;,&quot;customer&quot;:&quot;cust-091&quot;,&quot;status&quot;:&quot;PAI│
+│1    404     <span class="dim">2026-10-13 12:51:35.200</span>  cust-024  {&quot;order_id&quot;:&quot;ord-1-000404&quot;,&quot;customer&quot;:&quot;cust-024&quot;,&quot;status&quot;:&quot;PAI│
+│0    402     <span class="dim">2026-10-13 12:51:35.319</span>  cust-122  {&quot;order_id&quot;:&quot;ord-0-000402&quot;,&quot;customer&quot;:&quot;cust-122&quot;,&quot;status&quot;:&quot;CAN│
+│1    405     <span class="dim">2026-10-13 12:51:35.439</span>  cust-129  {&quot;order_id&quot;:&quot;ord-1-000405&quot;,&quot;customer&quot;:&quot;cust-129&quot;,&quot;status&quot;:&quot;PAI│
+│1    406     <span class="dim">2026-10-13 12:51:35.561</span>  cust-040  {&quot;order_id&quot;:&quot;ord-1-000406&quot;,&quot;customer&quot;:&quot;cust-040&quot;,&quot;status&quot;:&quot;CRE│
+│<span class="rev">0    403     </span><span class="rev dim">2026-10-13 12:51:35.678</span><span class="rev">  cust-210  {&quot;order_id&quot;:&quot;ord-0-000403&quot;,&quot;customer&quot;:&quot;cust-210&quot;,&quot;status&quot;:&quot;CRE</span>│
 └──────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<span class="fg-cyan b"> ↑↓</span><span class="dim"> move </span><span class="fg-cyan b"> ⏎</span><span class="dim"> detail </span><span class="fg-cyan b"> space</span><span class="dim"> pause </span><span class="fg-cyan b"> /</span><span class="dim"> filter </span><span class="fg-cyan b"> b/e</span><span class="dim"> beginning/end </span><span class="fg-cyan b"> o</span><span class="dim"> offset </span><span class="fg-cyan b"> t</span><span class="dim"> time </span><span class="fg-cyan b"> y/Y</span><span class="dim"> copy value/key </span><span class="fg-cyan b"> esc</span><span class="dim"> back </span>
+<span class="fg-cyan b"> ↑↓</span><span class="dim"> move </span><span class="fg-cyan b"> ⏎</span><span class="dim"> detail </span><span class="fg-cyan b"> space</span><span class="dim"> pause </span><span class="fg-cyan b"> /</span><span class="dim"> filter </span><span class="fg-cyan b"> p</span><span class="dim"> produce </span><span class="fg-cyan b"> E</span><span class="dim"> edit &amp; produce </span><span class="fg-cyan b"> X</span><span class="dim"> replay </span><span class="fg-cyan b"> x</span><span class="dim"> export </span><span class="fg-cyan b"> ?</span><span class="dim"> help </span><span class="fg-cyan b"> esc</span><span class="dim"> back </span>
 </pre></div>
           <p class="terminal-caption">Opening a topic shows the last 100 messages of each partition, then follows new ones as they arrive.</p>
         </div>
         <div role="tabpanel" id="panel-filter" aria-labelledby="tab-filter" hidden>
-          <div class="terminal-screen"><pre class="tui" aria-label="kaffy screen: Filter"><span class="fg-black bg-cyan b"> kaffy </span> <span class="dim">profile </span>demo <span class="fg-black bg-yellow b"> READ-ONLY </span><span class="dim">  │  </span><span class="fg-green">● connected · 3 brokers</span><span class="dim">  │  topic </span><span class="fg-cyan b">orders</span>
+          <div class="terminal-screen"><pre class="tui" aria-label="kaffy screen: Filter"><span class="fg-black bg-cyan b"> kaffy </span> <span class="dim">profile </span>demo <span class="fg-black bg-magenta b"> WRITE </span><span class="dim">  │  </span><span class="fg-green">● connected · 3 brokers</span><span class="dim">  │  topic </span><span class="fg-cyan b">orders</span>                <span class="rev"> 1 Topics </span>  <span class="dim"> 2 Groups </span>
 ┌<span class="fg-cyan b"> orders </span>────────────────────────<span class="dim"> 3 partitions </span><span class="fg-yellow"> filter: ~&quot;status&quot;:&quot;(PAID|SHIPPED)&quot; p:0,1 · 110 match  ⏸ PAUSED </span>┐
 │<span class="b u">P    Offset  Timestamp                Key       Value                                                         </span>│
-│1    384     <span class="dim">2026-10-13 11:29:13.780</span>  cust-203  {&quot;order_id&quot;:&quot;ord-1-000384&quot;,&quot;customer&quot;:&quot;cust-203&quot;,&quot;status&quot;:&quot;PAI│
-│0    385     <span class="dim">2026-10-13 11:29:15.280</span>  cust-041  {&quot;order_id&quot;:&quot;ord-0-000385&quot;,&quot;customer&quot;:&quot;cust-041&quot;,&quot;status&quot;:&quot;SHI│
-│0    386     <span class="dim">2026-10-13 11:29:16.780</span>  cust-229  {&quot;order_id&quot;:&quot;ord-0-000386&quot;,&quot;customer&quot;:&quot;cust-229&quot;,&quot;status&quot;:&quot;SHI│
-│1    387     <span class="dim">2026-10-13 11:29:18.280</span>  cust-129  {&quot;order_id&quot;:&quot;ord-1-000387&quot;,&quot;customer&quot;:&quot;cust-129&quot;,&quot;status&quot;:&quot;PAI│
-│0    388     <span class="dim">2026-10-13 11:29:19.780</span>  cust-046  {&quot;order_id&quot;:&quot;ord-0-000388&quot;,&quot;customer&quot;:&quot;cust-046&quot;,&quot;status&quot;:&quot;SHI│
-│1    390     <span class="dim">2026-10-13 11:29:22.780</span>  cust-071  {&quot;order_id&quot;:&quot;ord-1-000390&quot;,&quot;customer&quot;:&quot;cust-071&quot;,&quot;status&quot;:&quot;SHI│
-│0    391     <span class="dim">2026-10-13 11:29:24.280</span>  cust-155  {&quot;order_id&quot;:&quot;ord-0-000391&quot;,&quot;customer&quot;:&quot;cust-155&quot;,&quot;status&quot;:&quot;SHI│
-│1    391     <span class="dim">2026-10-13 11:29:24.280</span>  cust-010  {&quot;order_id&quot;:&quot;ord-1-000391&quot;,&quot;customer&quot;:&quot;cust-010&quot;,&quot;status&quot;:&quot;PAI│
-│1    392     <span class="dim">2026-10-13 11:29:25.780</span>  cust-141  {&quot;order_id&quot;:&quot;ord-1-000392&quot;,&quot;customer&quot;:&quot;cust-141&quot;,&quot;status&quot;:&quot;SHI│
-│0    393     <span class="dim">2026-10-13 11:29:27.280</span>  cust-193  {&quot;order_id&quot;:&quot;ord-0-000393&quot;,&quot;customer&quot;:&quot;cust-193&quot;,&quot;status&quot;:&quot;PAI│
-│0    394     <span class="dim">2026-10-13 11:29:28.780</span>  cust-162  {&quot;order_id&quot;:&quot;ord-0-000394&quot;,&quot;customer&quot;:&quot;cust-162&quot;,&quot;status&quot;:&quot;SHI│
-│1    394     <span class="dim">2026-10-13 11:29:28.780</span>  cust-006  {&quot;order_id&quot;:&quot;ord-1-000394&quot;,&quot;customer&quot;:&quot;cust-006&quot;,&quot;status&quot;:&quot;PAI│
-│0    395     <span class="dim">2026-10-13 11:29:30.280</span>  cust-075  {&quot;order_id&quot;:&quot;ord-0-000395&quot;,&quot;customer&quot;:&quot;cust-075&quot;,&quot;status&quot;:&quot;PAI│
-│0    396     <span class="dim">2026-10-13 11:29:31.780</span>  cust-058  {&quot;order_id&quot;:&quot;ord-0-000396&quot;,&quot;customer&quot;:&quot;cust-058&quot;,&quot;status&quot;:&quot;PAI│
-│1    397     <span class="dim">2026-10-13 11:29:33.280</span>  cust-067  {&quot;order_id&quot;:&quot;ord-1-000397&quot;,&quot;customer&quot;:&quot;cust-067&quot;,&quot;status&quot;:&quot;PAI│
-│0    398     <span class="dim">2026-10-13 11:29:34.780</span>  cust-062  {&quot;order_id&quot;:&quot;ord-0-000398&quot;,&quot;customer&quot;:&quot;cust-062&quot;,&quot;status&quot;:&quot;SHI│
-│0    400     <span class="dim">2026-10-13 11:29:38.199</span>  cust-235  {&quot;order_id&quot;:&quot;ord-0-000400&quot;,&quot;customer&quot;:&quot;cust-235&quot;,&quot;status&quot;:&quot;PAI│
-│0    401     <span class="dim">2026-10-13 11:29:38.678</span>  cust-224  {&quot;order_id&quot;:&quot;ord-0-000401&quot;,&quot;customer&quot;:&quot;cust-224&quot;,&quot;status&quot;:&quot;SHI│
-│1    403     <span class="dim">2026-10-13 11:29:38.918</span>  cust-091  {&quot;order_id&quot;:&quot;ord-1-000403&quot;,&quot;customer&quot;:&quot;cust-091&quot;,&quot;status&quot;:&quot;PAI│
-│1    404     <span class="dim">2026-10-13 11:29:39.040</span>  cust-024  {&quot;order_id&quot;:&quot;ord-1-000404&quot;,&quot;customer&quot;:&quot;cust-024&quot;,&quot;status&quot;:&quot;PAI│
-│<span class="rev">1    405     </span><span class="rev dim">2026-10-13 11:29:39.278</span><span class="rev">  cust-129  {&quot;order_id&quot;:&quot;ord-1-000405&quot;,&quot;customer&quot;:&quot;cust-129&quot;,&quot;status&quot;:&quot;PAI</span>│
+│1    384     <span class="dim">2026-10-13 12:51:09.945</span>  cust-203  {&quot;order_id&quot;:&quot;ord-1-000384&quot;,&quot;customer&quot;:&quot;cust-203&quot;,&quot;status&quot;:&quot;PAI│
+│0    385     <span class="dim">2026-10-13 12:51:11.445</span>  cust-041  {&quot;order_id&quot;:&quot;ord-0-000385&quot;,&quot;customer&quot;:&quot;cust-041&quot;,&quot;status&quot;:&quot;SHI│
+│0    386     <span class="dim">2026-10-13 12:51:12.945</span>  cust-229  {&quot;order_id&quot;:&quot;ord-0-000386&quot;,&quot;customer&quot;:&quot;cust-229&quot;,&quot;status&quot;:&quot;SHI│
+│1    387     <span class="dim">2026-10-13 12:51:14.445</span>  cust-129  {&quot;order_id&quot;:&quot;ord-1-000387&quot;,&quot;customer&quot;:&quot;cust-129&quot;,&quot;status&quot;:&quot;PAI│
+│0    388     <span class="dim">2026-10-13 12:51:15.945</span>  cust-046  {&quot;order_id&quot;:&quot;ord-0-000388&quot;,&quot;customer&quot;:&quot;cust-046&quot;,&quot;status&quot;:&quot;SHI│
+│1    390     <span class="dim">2026-10-13 12:51:18.945</span>  cust-071  {&quot;order_id&quot;:&quot;ord-1-000390&quot;,&quot;customer&quot;:&quot;cust-071&quot;,&quot;status&quot;:&quot;SHI│
+│0    391     <span class="dim">2026-10-13 12:51:20.445</span>  cust-155  {&quot;order_id&quot;:&quot;ord-0-000391&quot;,&quot;customer&quot;:&quot;cust-155&quot;,&quot;status&quot;:&quot;SHI│
+│1    391     <span class="dim">2026-10-13 12:51:20.445</span>  cust-010  {&quot;order_id&quot;:&quot;ord-1-000391&quot;,&quot;customer&quot;:&quot;cust-010&quot;,&quot;status&quot;:&quot;PAI│
+│1    392     <span class="dim">2026-10-13 12:51:21.945</span>  cust-141  {&quot;order_id&quot;:&quot;ord-1-000392&quot;,&quot;customer&quot;:&quot;cust-141&quot;,&quot;status&quot;:&quot;SHI│
+│0    393     <span class="dim">2026-10-13 12:51:23.445</span>  cust-193  {&quot;order_id&quot;:&quot;ord-0-000393&quot;,&quot;customer&quot;:&quot;cust-193&quot;,&quot;status&quot;:&quot;PAI│
+│0    394     <span class="dim">2026-10-13 12:51:24.945</span>  cust-162  {&quot;order_id&quot;:&quot;ord-0-000394&quot;,&quot;customer&quot;:&quot;cust-162&quot;,&quot;status&quot;:&quot;SHI│
+│1    394     <span class="dim">2026-10-13 12:51:24.945</span>  cust-006  {&quot;order_id&quot;:&quot;ord-1-000394&quot;,&quot;customer&quot;:&quot;cust-006&quot;,&quot;status&quot;:&quot;PAI│
+│0    395     <span class="dim">2026-10-13 12:51:26.445</span>  cust-075  {&quot;order_id&quot;:&quot;ord-0-000395&quot;,&quot;customer&quot;:&quot;cust-075&quot;,&quot;status&quot;:&quot;PAI│
+│0    396     <span class="dim">2026-10-13 12:51:27.945</span>  cust-058  {&quot;order_id&quot;:&quot;ord-0-000396&quot;,&quot;customer&quot;:&quot;cust-058&quot;,&quot;status&quot;:&quot;PAI│
+│1    397     <span class="dim">2026-10-13 12:51:29.445</span>  cust-067  {&quot;order_id&quot;:&quot;ord-1-000397&quot;,&quot;customer&quot;:&quot;cust-067&quot;,&quot;status&quot;:&quot;PAI│
+│0    398     <span class="dim">2026-10-13 12:51:30.945</span>  cust-062  {&quot;order_id&quot;:&quot;ord-0-000398&quot;,&quot;customer&quot;:&quot;cust-062&quot;,&quot;status&quot;:&quot;SHI│
+│0    400     <span class="dim">2026-10-13 12:51:34.360</span>  cust-235  {&quot;order_id&quot;:&quot;ord-0-000400&quot;,&quot;customer&quot;:&quot;cust-235&quot;,&quot;status&quot;:&quot;PAI│
+│0    401     <span class="dim">2026-10-13 12:51:34.840</span>  cust-224  {&quot;order_id&quot;:&quot;ord-0-000401&quot;,&quot;customer&quot;:&quot;cust-224&quot;,&quot;status&quot;:&quot;SHI│
+│1    403     <span class="dim">2026-10-13 12:51:35.080</span>  cust-091  {&quot;order_id&quot;:&quot;ord-1-000403&quot;,&quot;customer&quot;:&quot;cust-091&quot;,&quot;status&quot;:&quot;PAI│
+│1    404     <span class="dim">2026-10-13 12:51:35.200</span>  cust-024  {&quot;order_id&quot;:&quot;ord-1-000404&quot;,&quot;customer&quot;:&quot;cust-024&quot;,&quot;status&quot;:&quot;PAI│
+│<span class="rev">1    405     </span><span class="rev dim">2026-10-13 12:51:35.439</span><span class="rev">  cust-129  {&quot;order_id&quot;:&quot;ord-1-000405&quot;,&quot;customer&quot;:&quot;cust-129&quot;,&quot;status&quot;:&quot;PAI</span>│
 └──────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<span class="fg-cyan b"> ↑↓</span><span class="dim"> move </span><span class="fg-cyan b"> ⏎</span><span class="dim"> detail </span><span class="fg-cyan b"> space</span><span class="dim"> pause </span><span class="fg-cyan b"> /</span><span class="dim"> filter </span><span class="fg-cyan b"> b/e</span><span class="dim"> beginning/end </span><span class="fg-cyan b"> o</span><span class="dim"> offset </span><span class="fg-cyan b"> t</span><span class="dim"> time </span><span class="fg-cyan b"> y/Y</span><span class="dim"> copy value/key </span><span class="fg-cyan b"> esc</span><span class="dim"> back </span>
+<span class="fg-cyan b"> ↑↓</span><span class="dim"> move </span><span class="fg-cyan b"> ⏎</span><span class="dim"> detail </span><span class="fg-cyan b"> space</span><span class="dim"> pause </span><span class="fg-cyan b"> /</span><span class="dim"> filter </span><span class="fg-cyan b"> p</span><span class="dim"> produce </span><span class="fg-cyan b"> E</span><span class="dim"> edit &amp; produce </span><span class="fg-cyan b"> X</span><span class="dim"> replay </span><span class="fg-cyan b"> x</span><span class="dim"> export </span><span class="fg-cyan b"> ?</span><span class="dim"> help </span><span class="fg-cyan b"> esc</span><span class="dim"> back </span>
 </pre></div>
           <p class="terminal-caption">Filters combine plain words, regular expressions, fields, partitions and time ranges. Here: orders that are paid or shipped, on partitions 0 and 1.</p>
         </div>
         <div role="tabpanel" id="panel-detail" aria-labelledby="tab-detail" hidden>
-          <div class="terminal-screen"><pre class="tui" aria-label="kaffy screen: Avro message"><span class="fg-black bg-cyan b"> kaffy </span> <span class="dim">profile </span>demo <span class="fg-black bg-yellow b"> READ-ONLY </span><span class="dim">  │  </span><span class="fg-green">● connected · 3 brokers</span><span class="dim">  │  topic </span><span class="fg-cyan b">sensor-readings</span>
+          <div class="terminal-screen"><pre class="tui" aria-label="kaffy screen: Avro message"><span class="fg-black bg-cyan b"> kaffy </span> <span class="dim">profile </span>demo <span class="fg-black bg-magenta b"> WRITE </span><span class="dim">  │  </span><span class="fg-green">● connected · 3 brokers</span><span class="dim">  │  topic </span><span class="fg-cyan b">sensor-readings</span>       <span class="rev"> 1 Topics </span>  <span class="dim"> 2 Groups </span>
 ┌<span class="fg-cyan b"> sensor-readings · p2 · offset 403 </span>───────────────────────────────────────────────────────────────────────────┐
 │<span class="fg-cyan">Topic      </span>sensor-readings                                                                                    │
 │<span class="fg-cyan">Partition  </span>2                                                                                                  │
 │<span class="fg-cyan">Offset     </span>403                                                                                                │
-│<span class="fg-cyan">Timestamp  </span>2026-10-13 11:29:41.475  (1791871181475)                                                           │
+│<span class="fg-cyan">Timestamp  </span>2026-10-13 12:51:37.635  (1791876097635)                                                           │
 │<span class="fg-cyan">Key        </span>sensor-7<span class="dim">  (text)</span>                                                                                   │
 │<span class="fg-cyan">Headers    </span><span class="dim">none</span>                                                                                               │
 │                                                                                                              │
@@ -129,12 +132,102 @@
 │                                                                                                              │
 │                                                                                                              │
 └──────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<span class="fg-cyan b"> ↑↓</span><span class="dim"> scroll </span><span class="fg-cyan b"> y</span><span class="dim"> copy value </span><span class="fg-cyan b"> Y</span><span class="dim"> copy key </span><span class="fg-cyan b"> esc</span><span class="dim"> back </span><span class="fg-cyan b"> q</span><span class="dim"> quit </span>
+<span class="fg-cyan b"> ↑↓</span><span class="dim"> scroll </span><span class="fg-cyan b"> y / Y</span><span class="dim"> copy value / key </span><span class="fg-cyan b"> E</span><span class="dim"> edit &amp; produce </span><span class="fg-cyan b"> p</span><span class="dim"> produce </span><span class="fg-cyan b"> ?</span><span class="dim"> help </span><span class="fg-cyan b"> esc</span><span class="dim"> back </span>
 </pre></div>
           <p class="terminal-caption">A message encoded with Avro, decoded through the Schema Registry and shown as JSON next to its key, headers and timestamp.</p>
         </div>
+        <div role="tabpanel" id="panel-groups" aria-labelledby="tab-groups" hidden>
+          <div class="terminal-screen"><pre class="tui" aria-label="kaffy screen: Consumer groups"><span class="fg-black bg-cyan b"> kaffy </span> <span class="dim">profile </span>demo <span class="fg-black bg-magenta b"> WRITE </span><span class="dim">  │  </span><span class="fg-green">● connected · 3 brokers</span>                                 <span class="dim"> 1 Topics </span>  <span class="rev"> 2 Groups </span>
+┌<span class="fg-cyan b"> Consumer groups (4) </span>─────────────────────────────────────────────────────────────────<span class="dim"> lag refreshes every 5s </span>┐
+│<span class="b u">  Group               State        Members  Topics                        Lag         Trend                   </span>│
+│<span class="rev">▶ analytics-backfill  </span><span class="rev bg-yellow">Empty      </span><span class="rev">  0        orders, user-events           </span><span class="rev bg-yellow">1,632     </span><span class="rev">  </span><span class="rev bg-yellow">▁▁▂▂▃▄▄▅▅▆▆▇██          </span>│
+│  orders-service      <span class="fg-green">Stable     </span>  3        orders                        <span class="fg-yellow">105       </span>  <span class="fg-yellow">▁▂▃▃▄▅▅▆▆▇▇▇██          </span>│
+│  payment-processor   <span class="fg-green">Stable     </span>  2        payments                      17          <span class="fg-cyan">█████▆▇▆▆▅▄▃▂▁          </span>│
+│  sensor-alerts       <span class="fg-green">Stable     </span>  1        sensor-readings               921         <span class="fg-cyan">██▇▇▇▆▆▅▄▄▃▂▂▁          </span>│
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<span class="fg-cyan b"> ↑↓</span><span class="dim"> move </span><span class="fg-cyan b"> ⏎</span><span class="dim"> open </span><span class="fg-cyan b"> R</span><span class="dim"> reset offsets </span><span class="fg-cyan b"> /</span><span class="dim"> filter </span><span class="fg-cyan b"> 1</span><span class="dim"> topics </span><span class="fg-cyan b"> r</span><span class="dim"> refresh </span><span class="fg-cyan b"> ?</span><span class="dim"> help </span><span class="fg-cyan b"> q</span><span class="dim"> quit </span>
+</pre></div>
+          <p class="terminal-caption">Every consumer group with its state, members and total lag, refreshed every 5 seconds. The trend shows whether a group is catching up or falling behind.</p>
+        </div>
+        <div role="tabpanel" id="panel-group" aria-labelledby="tab-group" hidden>
+          <div class="terminal-screen"><pre class="tui" aria-label="kaffy screen: Group lag"><span class="fg-black bg-cyan b"> kaffy </span> <span class="dim">profile </span>demo <span class="fg-black bg-magenta b"> WRITE </span><span class="dim">  │  </span><span class="fg-green">● connected · 3 brokers</span>                                 <span class="dim"> 1 Topics </span>  <span class="rev"> 2 Groups </span>
+┌<span class="fg-cyan b"> analytics-backfill </span>────────────────────────┐┌<span class="dim"> Total lag, last 21 refreshes </span>───────────────────────<span class="dim"> max 1,668 </span>┐
+│<span class="fg-cyan">State     </span><span class="fg-yellow">Empty</span>                             ││<span class="fg-cyan">▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▆▇▇▇▇█</span>                                           │
+│<span class="fg-cyan">Total lag </span>1,668                             ││<span class="fg-cyan">█████████████████████</span>                                           │
+│<span class="fg-cyan">Topics    </span>orders, user-events               ││<span class="fg-cyan">█████████████████████</span>                                           │
+│<span class="fg-cyan">Members   </span><span class="dim">none</span>                              ││<span class="fg-cyan">█████████████████████</span>                                           │
+│<span class="dim">No members: offsets can be reset (R)</span>        ││<span class="fg-cyan">█████████████████████</span>                                           │
+│                                            ││<span class="fg-cyan">█████████████████████</span>                                           │
+│                                            ││<span class="fg-cyan">█████████████████████</span>                                           │
+└────────────────────────────────────────────┘└────────────────────────────────────────────────────────────────┘
+┌<span class="dim"> 6 partition(s) </span>──────────────────────────────────────────────────────────────────────────────────────────────┐
+│<span class="b u">Topic        Partition  Committed       End offset      Lag                                                   </span>│
+│<span class="rev">orders       0          140             433             293                                                   </span>│
+│orders       1          155             433             278                                                   │
+│orders       2          170             433             263                                                   │
+│user-events  0          140             433             293                                                   │
+│user-events  1          155             433             278                                                   │
+│user-events  2          170             433             263                                                   │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<span class="fg-cyan b"> ↑↓</span><span class="dim"> move </span><span class="fg-cyan b"> R</span><span class="dim"> reset offsets </span><span class="fg-cyan b"> r</span><span class="dim"> refresh </span><span class="fg-cyan b"> ?</span><span class="dim"> help </span><span class="fg-cyan b"> esc</span><span class="dim"> back </span>
+</pre></div>
+          <p class="terminal-caption">One group's lag per partition, its members, and a chart of total lag over time. This group has stopped, so its lag keeps growing.</p>
+        </div>
+        <div role="tabpanel" id="panel-reset" aria-labelledby="tab-reset" hidden>
+          <div class="terminal-screen"><pre class="tui" aria-label="kaffy screen: Offset reset"><span class="fg-black bg-cyan b"> kaffy </span> <span class="dim">profile </span>demo <span class="fg-black bg-magenta b"> WRITE </span><span class="dim">  │  </span><span class="fg-green">● connected · 3 brokers</span>                                 <span class="dim"> 1 Topics </span>  <span class="rev"> 2 Groups </span>
+┌<span class="fg-cyan b"> analytics-backfill </span>────────────────────────┐┌<span class="dim"> Total lag, last 21 refreshes </span>───────────────────────<span class="dim"> max 1,668 </span>┐
+│<span class="fg-cyan">State     </span><span class="fg-yellow">Empty</span>                             ││<span class="fg-cyan">▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▆▇▇▇▇█</span>                                           │
+│<span class="fg-cyan">Total lag </span>1,668                             ││<span class="fg-cyan">█████████████████████</span>                                           │
+│<span class="fg-cyan">Topics    </span>orders, user-events               ││<span class="fg-cyan">█████████████████████</span>                                           │
+│<span class="fg-cyan">Members   </span><span class="dim">none</span>                              ││<span class="fg-cyan">█████████████████████</span>                                           │
+│<span class="dim">No members: offsets</span><span class="fg-cyan">┌</span><span class="fg-cyan b"> Reset offsets of analytics-backfill </span><span class="fg-cyan">─────────────────────────────────┐</span>                   │
+│                   <span class="fg-cyan">│</span><span class="dim">Move to </span>the earliest offset                                           <span class="fg-cyan">│</span>                   │
+│                   <span class="fg-cyan">│</span>                                                                      <span class="fg-cyan">│</span>                   │
+└───────────────────<span class="fg-cyan">│</span><span class="b u">Topic                       P      Current          New    Lag after</span>  <span class="fg-cyan">│</span>───────────────────┘
+┌<span class="dim"> 6 partition(s) </span>───<span class="fg-cyan">│</span>orders                      0          140            0          434  <span class="fg-cyan">│</span>───────────────────┐
+│<span class="b u">Topic        Partit</span><span class="fg-cyan">│</span>orders                      1          155            0          434  <span class="fg-cyan">│</span><span class="b u">                   </span>│
+│<span class="rev">orders       0     </span><span class="fg-cyan">│</span>orders                      2          170            0          434  <span class="fg-cyan">│</span><span class="rev">                   </span>│
+│orders       1     <span class="fg-cyan">│</span>user-events                 0          140            0          434  <span class="fg-cyan">│</span>                   │
+│orders       2     <span class="fg-cyan">│</span>user-events                 1          155            0          434  <span class="fg-cyan">│</span>                   │
+│user-events  0     <span class="fg-cyan">│</span>user-events                 2          170            0          434  <span class="fg-cyan">│</span>                   │
+│user-events  1     <span class="fg-cyan">│</span>                                                                      <span class="fg-cyan">│</span>                   │
+│user-events  2     <span class="fg-cyan">│</span><span class="fg-yellow">Consumers will process 930 message(s) again.</span>                          <span class="fg-cyan">│</span>                   │
+│                   <span class="fg-cyan">│</span>                                                                      <span class="fg-cyan">│</span>                   │
+│                   <span class="fg-cyan">│</span><span class="fg-cyan b"> y </span>reset<span class="fg-cyan b">   esc </span>cancel                                                 <span class="fg-cyan">│</span>                   │
+│                   <span class="fg-cyan">└──────────────────────────────────────────────────────────────────────┘</span>                   │
+│                                                                                                              │
+│                                                                                                              │
+│                                                                                                              │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<span class="fg-cyan b"> ↑↓</span><span class="dim"> move </span><span class="fg-cyan b"> R</span><span class="dim"> reset offsets </span><span class="fg-cyan b"> r</span><span class="dim"> refresh </span><span class="fg-cyan b"> ?</span><span class="dim"> help </span><span class="fg-cyan b"> esc</span><span class="dim"> back </span>
+</pre></div>
+          <p class="terminal-caption">Resetting offsets starts with a preview of every partition and how many messages consumers will process again. Nothing changes until you confirm.</p>
+        </div>
         <div role="tabpanel" id="panel-topics" aria-labelledby="tab-topics" hidden>
-          <div class="terminal-screen"><pre class="tui" aria-label="kaffy screen: Topics"><span class="fg-black bg-cyan b"> kaffy </span> <span class="dim">profile </span>demo <span class="fg-black bg-yellow b"> READ-ONLY </span><span class="dim">  │  </span><span class="fg-green">● connected · 3 brokers</span>
+          <div class="terminal-screen"><pre class="tui" aria-label="kaffy screen: Topics"><span class="fg-black bg-cyan b"> kaffy </span> <span class="dim">profile </span>demo <span class="fg-black bg-magenta b"> WRITE </span><span class="dim">  │  </span><span class="fg-green">● connected · 3 brokers</span>                                 <span class="rev"> 1 Topics </span>  <span class="dim"> 2 Groups </span>
 ┌<span class="fg-cyan b"> Topics (5) </span>──────────────────────────────────────────────────────────────────────────────────────────────────┐
 │<span class="b u">  Name                 Partitions   Replication   Under-replicated                                            </span>│
 │  <span class="dim">__consumer_offsets</span>   3            3             <span class="dim">0               </span>                                            │
@@ -159,7 +252,7 @@
 │                                                                                                              │
 │                                                                                                              │
 └──────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<span class="fg-cyan b"> ↑↓</span><span class="dim"> move </span><span class="fg-cyan b"> ⏎</span><span class="dim"> open </span><span class="fg-cyan b"> /</span><span class="dim"> filter </span><span class="fg-cyan b"> r</span><span class="dim"> refresh </span><span class="fg-cyan b"> q</span><span class="dim"> quit </span>
+<span class="fg-cyan b"> ↑↓</span><span class="dim"> move </span><span class="fg-cyan b"> ⏎</span><span class="dim"> open </span><span class="fg-cyan b"> /</span><span class="dim"> filter </span><span class="fg-cyan b"> 2</span><span class="dim"> consumer groups </span><span class="fg-cyan b"> r</span><span class="dim"> refresh </span><span class="fg-cyan b"> ?</span><span class="dim"> help </span><span class="fg-cyan b"> q</span><span class="dim"> quit </span>
 </pre></div>
           <p class="terminal-caption">Every topic with its partition count, replication factor and under-replicated partitions.</p>
         </div>
@@ -228,6 +321,11 @@ schema_registry = { url = "https://schema-registry.staging:8081" }</code></pre>
             <tr><th scope="row"><kbd>o</kbd> <kbd>t</kbd></th><td>Jump to an offset, or to a time such as <code>-15m</code></td></tr>
             <tr><th scope="row"><kbd>enter</kbd></th><td>Open a message</td></tr>
             <tr><th scope="row"><kbd>y</kbd> <kbd>Y</kbd></th><td>Copy the value or key</td></tr>
+            <tr><th scope="row"><kbd>p</kbd> <kbd>E</kbd></th><td>Produce a message, or edit this one and produce it</td></tr>
+            <tr><th scope="row"><kbd>X</kbd></th><td>Replay messages into a topic</td></tr>
+            <tr><th scope="row"><kbd>x</kbd></th><td>Export the shown messages</td></tr>
+            <tr><th scope="row"><kbd>2</kbd></th><td>Consumer groups, where <kbd>R</kbd> resets offsets</td></tr>
+            <tr><th scope="row"><kbd>?</kbd></th><td>All keys of the current screen</td></tr>
             <tr><th scope="row"><kbd>esc</kbd></th><td>Go back</td></tr>
           </tbody>
         </table>
@@ -241,8 +339,20 @@ schema_registry = { url = "https://schema-registry.staging:8081" }</code></pre>
           <dt><code>!cancelled</code></dt><dd>Leave out matching messages.</dd>
         </dl>
 
-        <h3>Safe by default</h3>
-        <p>Profiles are read-only unless you opt in, and kaffy reads partitions directly without joining a consumer group, so browsing never moves anyone's offsets.</p>
+      </div>
+    </section>
+
+    <section class="wrap columns" aria-labelledby="change-title">
+      <h2 id="change-title">Making changes</h2>
+      <div>
+        <p>Every change shows exactly what will happen and waits for <kbd>y</kbd>. On profiles marked <code>prod = true</code> you type the group or topic name instead. Profiles are read-only unless you set <code>read_only = false</code>, and kaffy never joins a consumer group just to read, so browsing moves no one's offsets.</p>
+        <dl class="defs">
+          <dt>Reset offsets</dt><dd>Move a stopped consumer group to the earliest or latest offset, a point in time, or a specific offset. The preview shows how many messages will be processed again or skipped.</dd>
+          <dt>Produce</dt><dd>Write a message in your <code>$EDITOR</code>: key, headers, partition and value. Editing an Avro message keeps it Avro.</dd>
+          <dt>Replay</dt><dd>Copy a range of messages, by offset or time, into the same or another topic. The current filter applies, so you can replay only the messages you are looking at.</dd>
+          <dt>Export</dt><dd>Save the shown messages as JSON, NDJSON or CSV. Works on read-only profiles too.</dd>
+        </dl>
+        <p>Try all of it safely with <code>kaffy --demo</code>, whose fake cluster accepts changes.</p>
       </div>
     </section>
   </main>
