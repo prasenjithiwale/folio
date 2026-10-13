@@ -1,12 +1,12 @@
 {
-  "version": "v0.2.0",
-  "published_at": "2026-10-13T07:28:11Z",
+  "version": "v0.3.0",
+  "published_at": "2026-10-13T09:59:00Z",
   "assets": [
     {
       "target": "x86_64-unknown-linux-gnu",
-      "url": "v0.2.0/kaffy-v0.2.0-x86_64-unknown-linux-gnu.tar.gz",
-      "size": 6582901,
-      "sha256": "0d8f2af2aae6875eeb03a558318a28ba0d71b50cb12cae502bb9c61d42ea5eb4"
+      "url": "v0.3.0/kaffy-v0.3.0-x86_64-unknown-linux-gnu.tar.gz",
+      "size": 7656937,
+      "sha256": "045e649699068cb1b28224d821a38392b78665dfff9bcca6150fe7d0e1527eb4"
     }
   ]
 }
