@@ -17,15 +17,19 @@
 }
 
 :root {
-  --fog: #e8ecef;
-  --paper: #f4f6f8;
-  --slate: #15202b;
-  --muted: #56636f;
-  --rule: #c9d1d8;
-  --harbor: #086a73;
-  --signal: #e8a317;
+  /* Cool paper and slate ink; harbor teal for links; amber marks offsets and releases. */
+  --fog: #f2f4f1;
+  --paper: #fbfcfa;
+  --slate: #13212b;
+  --muted: #586873;
+  --rule: #d3dad6;
+  --harbor: #0b6f78;
+  --signal: #e3a21a;
   --deep: #0f1a24;
-  --focus: #086a73;
+  --deep-2: #152431;
+  --on-deep: #d9e3ea;
+  --on-deep-muted: #8d9fae;
+  --focus: #0b6f78;
 
   /* Terminal palette, used by the kaffy renders in both themes. */
   --t-bg: #0f1a24;
@@ -47,18 +51,20 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --fog: #0e161e;
-    --paper: #142029;
-    --slate: #dce3e9;
-    --muted: #93a1ad;
-    --rule: #263642;
-    --harbor: #4fc2c9;
-    --focus: #4fc2c9;
-    --deep: #182833;
+    --fog: #0c141b;
+    --paper: #111c25;
+    --slate: #dce4e8;
+    --muted: #8fa0ab;
+    --rule: #22313c;
+    --harbor: #4fc8d0;
+    --focus: #4fc8d0;
+    --deep: #0f1a24;
+    --deep-2: #152431;
     --t-bg: #0b141b;
   }
-  /* Lift dark surfaces off the dark page. */
-  .command, .terminal { box-shadow: 0 0 0 1px #263642; }
+  /* Dark bands sit on a dark page: a hairline keeps their edge. */
+  .command { box-shadow: 0 0 0 1px #22313c; }
+  .band { border-block: 1px solid #1c2a35; }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -80,7 +86,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 code, pre, kbd { font-family: var(--mono); font-size: 0.875em; }
 
-.wrap { width: min(100% - 2rem, 72rem); margin-inline: auto; }
+.wrap { width: min(100% - 2rem, 76rem); margin-inline: auto; }
 
 /* Site header */
 .site-head {
@@ -89,39 +95,44 @@ code, pre, kbd { font-family: var(--mono); font-size: 0.875em; }
   align-items: baseline;
   gap: 1rem;
   padding-block: 1.25rem;
-  border-bottom: 1px solid var(--rule);
 }
 .site-head a { color: inherit; text-decoration: none; }
 .site-head a:hover { text-decoration: underline; }
 .site-name { font-weight: 700; font-stretch: 112%; letter-spacing: -0.01em; }
 .site-nav { display: flex; gap: 1.25rem; font-size: 0.9375rem; }
 
-/* Headlines use the width axis: wide and heavy. */
+/* The width axis carries the type: names wide and heavy, numbers tall and narrow. */
 .display {
   font-weight: 800;
   font-stretch: 125%;
-  letter-spacing: -0.03em;
-  line-height: 0.95;
+  letter-spacing: -0.035em;
+  line-height: 0.9;
   margin: 0;
 }
 
 h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  font-stretch: 118%;
-  letter-spacing: -0.015em;
-  line-height: 1.2;
+  font-size: 1.625rem;
+  font-weight: 750;
+  font-stretch: 120%;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
   margin: 0 0 1rem;
 }
 
-h3 { font-size: 1.0625rem; font-weight: 700; margin: 0 0 0.25rem; }
+h3 { font-size: 1.0625rem; font-weight: 700; margin: 0 0 0.35rem; }
 
 p { margin: 0 0 1rem; max-width: var(--measure); }
 
 .lede { font-size: 1.25rem; line-height: 1.5; color: var(--muted); max-width: 46ch; }
 
-section { padding-block: 3.5rem; border-top: 1px solid var(--rule); }
+section { padding-block: 4rem; border-top: 1px solid var(--rule); }
 section:first-of-type { border-top: 0; }
+
+/* A full-width dark band: the terminal's world. */
+.band { background: var(--deep); color: var(--on-deep); border-top: 0; }
+.band .lede { color: var(--on-deep-muted); }
+.band a { color: var(--t-cyan); }
+.band + section { border-top: 0; }
 
 .site-foot {
   padding-block: 2rem 3rem;
@@ -136,6 +147,7 @@ section:first-of-type { border-top: 0; }
   align-items: stretch;
   max-width: 100%;
   background: var(--deep);
+  border: 1px solid transparent;
   color: #e6edf2;
   border-radius: 6px;
   overflow: hidden;
@@ -161,6 +173,7 @@ section:first-of-type { border-top: 0; }
   min-width: 5.5rem;
 }
 .copy:hover { background: #1b2a37; }
+.band .command { background: var(--deep-2); border-color: #23384a; }
 .copy[data-state="done"] { color: var(--t-green); }
 
 /* kaffy renders: a real terminal frame */
@@ -189,8 +202,9 @@ section:first-of-type { border-top: 0; }
   white-space: nowrap;
 }
 .terminal-bar [role="tab"]:hover { color: var(--t-fg); }
-.terminal-bar [role="tab"][aria-selected="true"] { background: #17252f; color: var(--t-fg); }
-.terminal-screen { background: #17252f; overflow-x: auto; }
+.terminal-bar [role="tab"][aria-selected="true"] { background: var(--t-bg); color: var(--t-fg); }
+/* The screens carry kaffy's own colors; the background is its dark theme's. */
+.terminal-screen { background: #0f1a24; overflow-x: auto; }
 
 pre.tui {
   margin: 0;

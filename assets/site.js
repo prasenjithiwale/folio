@@ -34,7 +34,12 @@ for (const list of document.querySelectorAll('[role="tablist"]')) {
     tab.addEventListener("click", () => select(tab, false));
     tab.addEventListener("keydown", (event) => {
       const i = tabs.indexOf(tab);
-      const next = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[event.key];
+      // Vertical lists move with up and down; horizontal ones with left and right.
+      const vertical = list.getAttribute("aria-orientation") === "vertical";
+      const moves = vertical
+        ? { ArrowDown: i + 1, ArrowUp: i - 1 }
+        : { ArrowRight: i + 1, ArrowLeft: i - 1 };
+      const next = { ...moves, Home: 0, End: tabs.length - 1 }[event.key];
       if (next === undefined) return;
       event.preventDefault();
       select(tabs[(next + tabs.length) % tabs.length], true);
@@ -42,8 +47,29 @@ for (const list of document.querySelectorAll('[role="tablist"]')) {
   }
 }
 
-// Release details: elements with data-release="version|date|size|download|sha256"
-// inside a container with data-releases="<url of the releases folder>/".
+function listAssets(list, base, assets) {
+  const names = JSON.parse(list.dataset.targets || "{}");
+  list.replaceChildren(
+    ...assets.map((asset) => {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = base + asset.url;
+      link.textContent = names[asset.target] || asset.target;
+      const size = document.createElement("span");
+      size.textContent = ` ${(asset.size / 1048576).toFixed(1)} MB`;
+      const hash = document.createElement("code");
+      hash.className = "hash";
+      hash.textContent = asset.sha256;
+      item.append(link, size, document.createElement("br"), hash);
+      return item;
+    }),
+  );
+}
+
+// Release details: elements with data-release="version|date|size|download|sha256|assets"
+// inside a container with data-releases="<url of the releases folder>/". Size, download
+// and sha256 describe the first asset; "assets" lists every one, with data-targets
+// mapping target triples to readable names.
 for (const root of document.querySelectorAll("[data-releases]")) {
   const base = root.dataset.releases;
   fetch(base + "latest.json", { cache: "no-cache" })
@@ -62,6 +88,7 @@ for (const root of document.querySelectorAll("[data-releases]")) {
       for (const el of root.querySelectorAll("[data-release]")) {
         const key = el.dataset.release;
         if (key === "download") el.href = base + asset.url;
+        else if (key === "assets") listAssets(el, base, release.assets);
         else if (key in values) el.textContent = values[key];
       }
       root.dataset.loaded = "true";

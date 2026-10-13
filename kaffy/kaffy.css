@@ -1,13 +1,47 @@
 /* kaffy project page */
 
-.hero { padding-block: 3.5rem 4rem; }
-.hero .display { font-size: clamp(4.5rem, 16vw, 11rem); margin-left: -0.04em; }
-.hero .lede { margin-block: 1.25rem 2rem; }
-.hero .command { max-width: 54rem; }
+/* On this page the header sits on the band too. */
+.band-head .site-head a { color: var(--on-deep); }
+.band-head .site-name { color: #eef3f6; }
+.band-head + main .band { border-top: 0; }
 
-.release-line { margin-top: 0.9rem; font-size: 0.9375rem; color: var(--muted); }
-.release-line strong { color: var(--slate); font-weight: 600; }
-/* The release marker: amber, the one place the signal color appears. */
+/* Hero: a dark band, the terminal's own world, wordmark and install on top. */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem 4rem;
+  padding-block: 2.5rem 4rem;
+}
+@media (min-width: 64rem) {
+  .hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: end; }
+}
+.hero .display {
+  font-size: clamp(4.5rem, 15vw, 10.5rem);
+  margin-left: -0.05em;
+  color: #eef3f6;
+}
+.hero .lede { margin: 1.25rem 0 0; max-width: 40ch; }
+
+.hero-install { min-width: 0; }
+.hero-install .command { margin: 0; }
+
+/* Two-way switch between the install script and Homebrew. */
+.switch { display: inline-flex; gap: 0.25rem; margin-bottom: 0.75rem; padding: 0.2rem; border-radius: 8px; background: var(--deep-2); }
+.switch [role="tab"] {
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--on-deep-muted);
+  font: 600 0.875rem var(--sans);
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+.switch [role="tab"]:hover { color: var(--on-deep); }
+.switch [role="tab"][aria-selected="true"] { background: #23384a; color: #eef3f6; }
+
+.release-line { margin: 0.9rem 0 0; font-size: 0.9375rem; color: var(--on-deep-muted); }
+.release-line strong { color: #eef3f6; font-weight: 600; }
+/* The release marker: amber, as offsets are on the home page. */
 .release-line strong::before {
   content: "";
   display: inline-block;
@@ -22,18 +56,47 @@
 /* Release details appear once latest.json loads; a note shows if it can't. */
 .when-loaded, .when-missing { display: none; }
 [data-loaded="true"] .when-loaded { display: inline; }
-[data-loaded="true"] p.when-loaded { display: block; }
+[data-loaded="true"] p.when-loaded,
+[data-loaded="true"] ul.when-loaded { display: block; }
 [data-loaded="false"] .when-missing { display: block; }
 
-.hero .terminal { margin: 3rem 0 0; }
+/* The screens: a picker down the side like a TUI sidebar, the screen beside it. */
+.hero .terminal {
+  grid-column: 1 / -1;
+  margin: 1rem 0 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid #1f3140;
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.6);
+}
+.terminal-bar { border-bottom: 1px solid #1f3140; padding: 0.5rem; }
+.terminal-bar [role="tab"] { border-radius: 6px; padding: 0.45rem 0.8rem; }
+.terminal-bar [role="tab"][aria-selected="true"] { background: #1c2e3c; color: #eef3f6; }
+@media (min-width: 72rem) {
+  .hero .terminal { grid-template-columns: 11.5rem minmax(0, 1fr); }
+  .terminal-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.15rem;
+    padding: 0.75rem 0.5rem;
+    border-bottom: 0;
+    border-right: 1px solid #1f3140;
+    overflow: visible;
+  }
+  .terminal-bar [role="tab"] { text-align: left; }
+  /* The selected screen is marked with a bar, as kaffy marks the selected row. */
+  .terminal-bar [role="tab"][aria-selected="true"] { box-shadow: inset 3px 0 0 var(--t-cyan); }
+  .hero .terminal [role="tabpanel"] { grid-column: 2; grid-row: 1; }
+}
 .terminal-caption {
   margin: 0;
   padding: 0.75rem 1.1rem 0.9rem;
   max-width: none;
-  color: #93a1ad;
+  color: var(--on-deep-muted);
   font-size: 0.875rem;
-  border-top: 1px solid #22323e;
+  border-top: 1px solid #1f3140;
 }
+.terminal-caption kbd { background: #1c2e3c; border-color: #2b4152; color: #eef3f6; }
 
 /* Sections: heading in a narrow left column, content on the right. */
 /* minmax(0, 1fr) lets long commands scroll instead of widening the page. */
@@ -78,3 +141,8 @@ kbd {
   text-align: center;
   font-size: 0.8125rem;
 }
+
+/* One line per platform: name, size, then the checksum. */
+.downloads { list-style: none; padding: 0; margin: 0.5rem 0 1rem; }
+.downloads li { margin: 0 0 0.75rem; }
+.downloads span { color: var(--muted); }

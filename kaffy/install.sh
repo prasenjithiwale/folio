@@ -38,23 +38,17 @@ sha256() {
 detect_target() {
     os=$(uname -s)
     arch=$(uname -m)
+    # A shell running under Rosetta reports x86_64 on Apple Silicon; prefer the native build.
+    if [ "$os" = Darwin ] && [ "$arch" = x86_64 ] \
+        && [ "$(sysctl -n sysctl.proc_translated 2>/dev/null || echo 0)" = 1 ]; then
+        arch=arm64
+    fi
     case "$os/$arch" in
-        Linux/x86_64 | Linux/amd64) ;;
-        *) err "prebuilt kaffy binaries are available for Linux x86_64 only (this machine is $os/$arch)" ;;
+        Linux/x86_64 | Linux/amd64) echo "x86_64-unknown-linux-musl" ;;
+        Darwin/arm64 | Darwin/aarch64) echo "aarch64-apple-darwin" ;;
+        Darwin/x86_64) echo "x86_64-apple-darwin" ;;
+        *) err "prebuilt kaffy binaries are available for Linux x86_64 and macOS (this machine is $os/$arch)" ;;
     esac
-    # The binary links against glibc; musl systems such as Alpine cannot run it.
-    if ldd --version 2>&1 | grep -qi musl; then
-        err "this system uses musl libc; kaffy needs glibc 2.35+ (Ubuntu 22.04+, Debian 12+, Fedora 36+)"
-    fi
-    glibc=$(ldd --version 2>/dev/null | head -n1 | grep -oE '[0-9]+\.[0-9]+$' || true)
-    if [ -n "$glibc" ]; then
-        major=${glibc%.*}
-        minor=${glibc#*.}
-        if [ "$major" -lt 2 ] || { [ "$major" -eq 2 ] && [ "$minor" -lt 35 ]; }; then
-            err "kaffy needs glibc 2.35 or newer; this system has $glibc"
-        fi
-    fi
-    echo "x86_64-unknown-linux-gnu"
 }
 
 main() {
@@ -77,8 +71,18 @@ main() {
     trap 'rm -rf "$tmp"' EXIT INT TERM
 
     say "downloading kaffy $version for $target"
-    fetch "$RELEASES_URL/$version/$archive" "$tmp/$archive" \
-        || err "download failed: $RELEASES_URL/$version/$archive"
+    if ! fetch "$RELEASES_URL/$version/$archive" "$tmp/$archive" 2>/dev/null; then
+        # Releases before v0.4.0 had a single glibc build for Linux.
+        if [ "$target" = x86_64-unknown-linux-musl ]; then
+            target=x86_64-unknown-linux-gnu
+            archive="kaffy-$version-$target.tar.gz"
+            say "no static build for $version; trying $target (needs glibc 2.35+)"
+            fetch "$RELEASES_URL/$version/$archive" "$tmp/$archive" \
+                || err "download failed: $RELEASES_URL/$version/$archive"
+        else
+            err "no $target build of kaffy $version (macOS builds start at v0.4.0)"
+        fi
+    fi
     fetch "$RELEASES_URL/$version/$archive.sha256" "$tmp/$archive.sha256" \
         || err "checksum download failed"
 
