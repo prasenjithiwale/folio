@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>kaffy: a terminal UI for Kafka</title>
   <meta name="description" content="kaffy is a terminal UI for exploring and operating Kafka clusters: follow messages live, seek by offset or time, filter, decode Avro and Protobuf, watch consumer lag, reset offsets, produce and replay messages, browse the Schema Registry, administer topics and check broker health. For Linux and macOS.">
+  <meta property="og:title" content="kaffy: a terminal UI for Kafka">
+  <meta property="og:description" content="Follow Kafka messages live, decode Avro and Protobuf, watch consumer lag and make changes safely, from your terminal.">
+  <meta property="og:image" content="https://prasenjithiwale.github.io/folio/kaffy/media/preview.png">
+  <meta property="og:url" content="https://prasenjithiwale.github.io/folio/kaffy/">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f1a24'/%3E%3Cpath d='M9 8v16M9 16l9-8M12 13l7 11' stroke='%234fc8d0' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -399,6 +404,14 @@
         </div>
       </figure>
      </div>
+    </section>
+
+    <section class="wrap columns" id="tour" aria-labelledby="tour-title">
+      <h2 id="tour-title">See it run</h2>
+      <div>
+        <video class="recording" src="media/preview.mp4" poster="media/preview.png" width="1200" height="680" autoplay muted loop playsinline controls aria-describedby="tour-caption"></video>
+        <p id="tour-caption">Recorded in <code>kaffy --demo</code>: open a topic from the command palette, filter it to paid or shipped orders on two partitions, read one message, check a stopped consumer group's growing lag, preview an offset reset without applying it, and diff two versions of an Avro schema. Also available as a <a href="media/preview.gif">GIF</a>.</p>
+      </div>
     </section>
 
     <section class="wrap columns" id="install" aria-labelledby="install-title">

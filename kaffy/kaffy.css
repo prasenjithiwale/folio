@@ -146,3 +146,13 @@ kbd {
 .downloads { list-style: none; padding: 0; margin: 0.5rem 0 1rem; }
 .downloads li { margin: 0 0 0.75rem; }
 .downloads span { color: var(--muted); }
+
+/* The recorded tour. */
+.recording {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #1f3140;
+  border-radius: 8px;
+  background: #0f1a24;
+}
