@@ -45,9 +45,10 @@ detect_target() {
     fi
     case "$os/$arch" in
         Linux/x86_64 | Linux/amd64) echo "x86_64-unknown-linux-musl" ;;
+        Linux/aarch64 | Linux/arm64) echo "aarch64-unknown-linux-musl" ;;
         Darwin/arm64 | Darwin/aarch64) echo "aarch64-apple-darwin" ;;
         Darwin/x86_64) echo "x86_64-apple-darwin" ;;
-        *) err "prebuilt kaffy binaries are available for Linux x86_64 and macOS (this machine is $os/$arch)" ;;
+        *) err "prebuilt kaffy binaries are available for Linux (x86_64, arm64) and macOS (this machine is $os/$arch)" ;;
     esac
 }
 
@@ -80,7 +81,7 @@ main() {
             fetch "$RELEASES_URL/$version/$archive" "$tmp/$archive" \
                 || err "download failed: $RELEASES_URL/$version/$archive"
         else
-            err "no $target build of kaffy $version (macOS builds start at v0.4.0)"
+            err "no $target build of kaffy $version (macOS builds start at v0.4.0, Linux arm64 builds at v0.4.1)"
         fi
     fi
     fetch "$RELEASES_URL/$version/$archive.sha256" "$tmp/$archive.sha256" \

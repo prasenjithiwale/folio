@@ -54,7 +54,7 @@
         </div>
         <p class="release-line">
           <span class="when-loaded">Latest release <strong data-release="version">v0.1.0</strong>, <span data-release="date"></span>.</span>
-          Linux x86_64 and macOS. <a href="#install">Other ways to install</a> · <a href="https://github.com/prasenjithiwale/kaffy">Source on GitHub</a>
+          Linux (x86_64, arm64) and macOS. <a href="#install">Other ways to install</a> · <a href="https://github.com/prasenjithiwale/kaffy">Source on GitHub</a>
         </p>
       </div>
 
@@ -434,7 +434,7 @@
         <h3>Options</h3>
         <p>Set these before <code>sh</code> to change what the script does:</p>
         <div class="command">
-          <code id="install-cmd-3">curl -fsSL https://prasenjithiwale.github.io/folio/kaffy/install.sh | KAFFY_VERSION=v0.4.0 KAFFY_INSTALL_DIR=/usr/local/bin sh</code>
+          <code id="install-cmd-3">curl -fsSL https://prasenjithiwale.github.io/folio/kaffy/install.sh | KAFFY_VERSION=v0.4.1 KAFFY_INSTALL_DIR=/usr/local/bin sh</code>
           <button class="copy" type="button" data-copy="#install-cmd-3">Copy</button>
         </div>
         <dl class="defs">
@@ -443,11 +443,11 @@
         </dl>
 
         <h3>Requirements</h3>
-        <p>Linux on x86_64, any distribution: the binary is static, so Alpine and older systems work too. macOS 11 or newer, on Apple Silicon or Intel.</p>
+        <p>Linux on x86_64 or arm64, any distribution: the binary is static, so Alpine and older systems work too. macOS 11 or newer, on Apple Silicon or Intel.</p>
 
         <h3>Manual download</h3>
         <p class="when-loaded">Download the archive for your system and compare it with its SHA-256 checksum:</p>
-        <ul class="when-loaded downloads" data-release="assets" data-targets='{"x86_64-unknown-linux-musl": "Linux x86_64", "aarch64-apple-darwin": "macOS, Apple Silicon", "x86_64-apple-darwin": "macOS, Intel"}'></ul>
+        <ul class="when-loaded downloads" data-release="assets" data-targets='{"x86_64-unknown-linux-musl": "Linux x86_64", "aarch64-unknown-linux-musl": "Linux arm64", "aarch64-apple-darwin": "macOS, Apple Silicon", "x86_64-apple-darwin": "macOS, Intel"}'></ul>
         <p class="when-missing">The first release is being published. Check back in a few minutes.</p>
 
         <h3>Uninstall</h3>
