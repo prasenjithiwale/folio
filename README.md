@@ -15,6 +15,9 @@ kaffy/
     latest.txt        version the install script installs by default
     latest.json       version, date, size and checksum shown on the pages
     vX.Y.Z/           kaffy-vX.Y.Z-x86_64-unknown-linux-gnu.tar.gz and .sha256
+ledge/                Ledge's page, written whole by edge-notes' release workflow
+                      (tools/render_site.sh); do not edit by hand. The packages it
+                      links to stay on prasenjithiwale.github.io/edge-notes-apt.
 ```
 
 The terminal screens on the kaffy page are real renders of the app, produced with

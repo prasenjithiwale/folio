@@ -66,6 +66,7 @@
   border: 1px solid #1f3140;
   text-decoration: none;
 }
+.preview-shot img { display: block; width: 100%; height: auto; }
 .preview pre.tui { font-size: clamp(7px, 0.62vw, 9.5px); padding: 0.9rem; pointer-events: none; }
 .preview::after {
   content: "";
