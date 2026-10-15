@@ -1,0 +1,65 @@
+{
+ "headline": {
+  "groups_list_seconds": {
+   "v0.4.1": null,
+   "v0.4.1_note": "not shown within 400 s",
+   "next": 0.23
+  },
+  "groups_tab_cpu_percent_avg": {
+   "v0.4.1": 878.9,
+   "next": 3.3
+  },
+  "groups_tab_threads": {
+   "v0.4.1": 3440,
+   "next": 18
+  },
+  "groups_tab_open_fds": {
+   "v0.4.1": 6685,
+   "next": 21
+  },
+  "groups_tab_memory_mb": {
+   "v0.4.1": 562.3,
+   "next": 31.1
+  },
+  "group_detail_seconds": {
+   "v0.4.1": null,
+   "v0.4.1_note": "not shown within 120 s",
+   "next": 0.07
+  },
+  "from_start_first_offset": {
+   "v0.4.1": 91926,
+   "next": 0
+  },
+  "seek_50000_first_offset": {
+   "v0.4.1": 91277,
+   "next": 50000
+  },
+  "next_page_seconds": {
+   "next": 0.5
+  },
+  "messages_peak_memory_mb": {
+   "v0.4.1": 292.1,
+   "next": 74.6
+  },
+  "topic_list_seconds": {
+   "v0.4.1": 0.18,
+   "next": 0.3
+  }
+ },
+ "dataset": {
+  "broker": "1 Kafka 4.x broker (Homebrew, KRaft), plaintext, macOS arm64 10 cores 16 GB",
+  "topics": 2010,
+  "partitions": 6119,
+  "small_topics": 2000,
+  "small_topic_messages": 319398,
+  "big_topics": 5,
+  "big_topic_partitions": 12,
+  "big_topic_messages_each": 1000000,
+  "total_messages_approx": 5320000,
+  "consumer_groups": 1050,
+  "idle_groups": 1000,
+  "live_groups": 50,
+  "live_consumers": 200,
+  "live_traffic": "about 50 msg/s into each big topic throughout"
+ }
+}
