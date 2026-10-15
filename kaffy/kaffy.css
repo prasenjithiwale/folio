@@ -166,3 +166,6 @@ kbd {
 .charts { display: grid; gap: 1rem; margin: 0 0 1rem; max-width: 720px; }
 .charts img { display: block; width: 100%; height: auto; background: #fff; border: 1px solid var(--rule); border-radius: 8px; }
 .note { color: var(--muted); font-size: 0.95rem; }
+.compare { margin: 0 0 1rem; max-width: var(--measure); }
+.compare summary { cursor: pointer; font-weight: 600; padding: 0.25rem 0; }
+.compare[open] summary { margin-bottom: 0.5rem; }

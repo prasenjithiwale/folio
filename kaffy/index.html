@@ -415,31 +415,35 @@
     </section>
 
     <section class="wrap columns" id="performance" aria-labelledby="perf-title">
-      <h2 id="perf-title">Built for big clusters</h2>
+      <h2 id="perf-title">Tested at scale</h2>
       <div>
-        <p>kaffy 0.5 was stress-tested on one cluster with <strong>2,010 topics, 6,119 partitions, about 5.3 million messages, 1,050 consumer groups and 200 live consumers</strong>, with messages arriving throughout. The same scripted steps ran against 0.4.1 and 0.5.0 one after the other, and timed what appears on screen.</p>
+        <p>kaffy 0.5 was timed on a cluster with <strong>2,000+ topics, 6,000+ partitions, 5.3 million messages, over 1,000 consumer groups and 200 live consumers</strong>, twice: on one broker on the same machine, and on three brokers reached over SASL_SSL through a 30 ms round trip, like a cluster in the cloud. A script drove kaffy and timed what appeared on screen.</p>
         <table class="perf">
-          <caption>Same cluster, same steps</caption>
-          <thead><tr><th scope="col"></th><th scope="col">0.4.1</th><th scope="col">0.5.0</th></tr></thead>
+          <caption>kaffy 0.5.0 on the same data</caption>
+          <thead><tr><th scope="col"></th><th scope="col">Local broker</th><th scope="col">3 brokers, SASL_SSL, 30 ms away</th></tr></thead>
           <tbody>
-            <tr><th scope="row">Consumer group list with lag</th><td>never appeared in 400 s</td><td><strong>0.23 s</strong></td></tr>
-            <tr><th scope="row">CPU with the groups tab open</th><td>879 %</td><td><strong>3.3 %</strong></td></tr>
-            <tr><th scope="row">Threads / open sockets and files</th><td>3,440 / 6,685</td><td><strong>18 / 21</strong></td></tr>
-            <tr><th scope="row">Memory with the groups tab open</th><td>562 MB</td><td><strong>31 MB</strong></td></tr>
-            <tr><th scope="row">One group's lag per partition</th><td>never appeared in 120 s</td><td><strong>0.07 s</strong></td></tr>
-            <tr><th scope="row">“From the start” on a 1M-message topic</th><td>showed offset 91,926</td><td><strong>offset 0 on every partition</strong></td></tr>
-            <tr><th scope="row">“Jump to offset 50,000”</th><td>showed 91,277</td><td><strong>50,000</strong></td></tr>
-            <tr><th scope="row">Memory reading that topic</th><td>292 MB</td><td><strong>75 MB</strong></td></tr>
+            <tr><th scope="row">Topic list</th><td>0.30 s</td><td><strong>0.66 s</strong></td></tr>
+            <tr><th scope="row">All 1,000+ consumer groups with lag</th><td>0.23 s</td><td><strong>0.83 s</strong></td></tr>
+            <tr><th scope="row">One group's lag per partition</th><td>0.07 s</td><td><strong>0.18 s</strong></td></tr>
+            <tr><th scope="row">A page of history from offset 0 (1M-message topic)</th><td>0.07 s</td><td><strong>0.47 s</strong></td></tr>
+            <tr><th scope="row">The next page</th><td>0.50 s</td><td><strong>0.53 s</strong></td></tr>
+            <tr><th scope="row">Memory, groups tab open</th><td>31 MB</td><td><strong>31 MB</strong></td></tr>
+            <tr><th scope="row">Threads / open sockets</th><td>18 / 21</td><td><strong>19 / 27</strong></td></tr>
+            <tr><th scope="row">CPU, groups tab open</th><td>3.3 %</td><td><strong>2.5 %</strong></td></tr>
           </tbody>
         </table>
-        <div class="charts">
-          <img src="media/perf/groups-load.svg" alt="Time to see the full list of 1,050 consumer groups: 0.4.1 never showed it within 400 seconds, 0.5.0 took 0.23 seconds." width="720" height="118">
-          <img src="media/perf/groups-threads.svg" alt="Threads in the first minute with the groups tab open: 0.4.1 climbs past 1,700, 0.5.0 stays at 18." width="720" height="300">
-          <img src="media/perf/groups-cpu.svg" alt="CPU in the first minute with the groups tab open: 0.4.1 rises to about 900 percent, 0.5.0 stays near zero." width="720" height="300">
-          <img src="media/perf/messages-memory.svg" alt="Reading a 1M-message topic from the start: peak memory 292 MB on 0.4.1 and 75 MB on 0.5.0; average CPU 17.3 percent and 2.6 percent." width="720" height="180">
-        </div>
-        <p class="note">One Kafka 4 broker on the same Mac (Apple Silicon, 10 cores), so there was no network delay: on a remote cluster expect the times to be longer, but the gap to stay. The numbers are in <a href="media/perf/metrics.json">metrics.json</a>.</p>
-        <p>On shared clusters, show only what you work on with <code>topics = ["checkout-*"]</code> and <code>groups = [...]</code> in a profile, or <code>--topics</code> and <code>--groups</code> for one run.</p>
+        <p>Lag matched Kafka's own <code>kafka-consumer-groups</code> exactly. On shared clusters, show only what you work on with <code>topics = ["checkout-*"]</code> and <code>groups = [...]</code> in a profile, or <code>--topics</code> and <code>--groups</code> for one run.</p>
+        <details class="compare">
+          <summary>Compared with 0.4.1</summary>
+          <p>These tests found that 0.4.1 didn't scale: on the local broker it never showed the 1,050-group list (still empty after 400 s), used about 9 cores, 3,440 threads and 6,685 sockets, and jumped to the newest messages instead of the start of a big topic. 0.5.0 fixes all of it. The <a href="https://github.com/prasenjithiwale/kaffy/releases/tag/v0.5.0">release notes</a> have the details.</p>
+          <div class="charts">
+            <img src="media/perf/groups-load.svg" alt="Time to see the full list of 1,050 consumer groups: 0.4.1 never showed it within 400 seconds, 0.5.0 took 0.23 seconds." width="720" height="118" loading="lazy">
+            <img src="media/perf/groups-threads.svg" alt="Threads in the first minute with the groups tab open: 0.4.1 climbs past 1,700, 0.5.0 stays at 18." width="720" height="300" loading="lazy">
+            <img src="media/perf/groups-cpu.svg" alt="CPU in the first minute with the groups tab open: 0.4.1 rises to about 900 percent, 0.5.0 stays near zero." width="720" height="300" loading="lazy">
+            <img src="media/perf/messages-memory.svg" alt="Reading a 1M-message topic from the start: peak memory 292 MB on 0.4.1 and 75 MB on 0.5.0; average CPU 17.3 percent and 2.6 percent." width="720" height="180" loading="lazy">
+          </div>
+        </details>
+        <p class="note">Measured on a MacBook (Apple Silicon, 10 cores) running the brokers too. The 30 ms delay is fixed, with no loss or jitter; a real network varies more. Not yet tested: tens of thousands of partitions, and Confluent Cloud or MSK themselves. The numbers are in <a href="media/perf/metrics.json">metrics.json</a>.</p>
       </div>
     </section>
 
